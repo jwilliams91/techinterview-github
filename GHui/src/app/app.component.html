@@ -1,15 +1,12 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top res">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">GitHub Event Feed</a>
         </div>
-        <ul class="nav navbar-nav navbar-left">
-            <li class="active"><a href="#">Home</a></li>
-        </ul>
         <ul class="nav navbar-nav navbar-right">
             <li *ngIf="!loggedIn" ><button type="button" class="btn btn-primary navbar-btn" (click)="login()">Login</button></li>
             <li *ngIf="loggedIn" class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{username}}<span class="caret"></span></a>
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img *ngIf="loaded" class="square" [src]="avatarUrl"/>{{username}}<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a (click)="logout()">Logout</a></li>
                 </ul>

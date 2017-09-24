@@ -14,6 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -36,7 +38,8 @@ import com.ghapi.praeses.configuration.GitHubApiConfig;
 @RequestMapping("api/users")
 public class GitHubUserController {
 
-	private GitHub ghClient;
+	private static GitHub ghClient;
+	
 	
 	@RequestMapping("/get")
 	public GHPerson getUser(@RequestParam(value="username") String username) throws IOException {
@@ -44,9 +47,23 @@ public class GitHubUserController {
        
 	}
 	
+	@RequestMapping("/getUserAvatar")
+	public String getAvatar(@RequestParam(value="username") String username) throws IOException {
+		return ghClient.getUser(username).getAvatarUrl();
+	}
+	
+	@RequestMapping("/getUserAvatarBulk")
+	public List<String> getAvatars(@RequestBody List<String> users) throws IOException {
+		List<String> avatarUrls = new ArrayList<String>();
+		for(String user: users) {
+			avatarUrls.add(ghClient.getUser(user).getAvatarUrl());
+		}
+		return avatarUrls;
+	}
+	
 	@RequestMapping("/current")
-	public GHPerson getCurrentUser() throws IOException {
-		return ghClient.getMyself();
+	public String getCurrentUser() throws IOException {
+		return ghClient.getMyself().getLogin();
 	}
 
 	@RequestMapping(value="/authenticate", method=POST)
@@ -86,8 +103,11 @@ public class GitHubUserController {
 	private String setTokenForClient(String rawToken) throws IOException {
 		String[] splitTokenString = rawToken.split("&");
 		String parsedToken = splitTokenString[0].substring(13);
-		GitHubApiConfig.setAccessToken(parsedToken);
-		ghClient = GitHub.connectUsingOAuth(GitHubApiConfig.getAccessToken());
+		GitHubApiConfig.updateClientForControllers(GitHub.connectUsingOAuth(parsedToken));
 		return ghClient.getMyself().getLogin();
+	}
+
+	public static void setGhClient(GitHub ghClient) {
+		GitHubUserController.ghClient = ghClient;
 	}
 }

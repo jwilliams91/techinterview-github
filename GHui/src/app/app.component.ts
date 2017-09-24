@@ -11,17 +11,27 @@ import { Router } from '@angular/router';
 export class AppComponent {
 
   loggedIn: boolean;
-  username: String;
+  username: string;
+  avatarUrl: string;
+  loaded: boolean;
 
   constructor(private ghService: GHService, private router: Router) { }
 
   ngOnInit() {
     if(sessionStorage.getItem('currentUser')) {
       this.username = sessionStorage.getItem('currentUser');
+      this.ghService.getUserAvatar(this.username).then((url) => {
+        this.avatarUrl = url;
+        this.loaded = true;
+      });
       this.loggedIn = true;
     }
     this.ghService.logonSuccess$.subscribe((message) => {
       this.username = sessionStorage.getItem('currentUser');
+      this.ghService.getUserAvatar(this.username).then((url) => {
+        this.avatarUrl = url;
+        this.loaded = true;
+      });
       this.loggedIn = true;
     });
   }

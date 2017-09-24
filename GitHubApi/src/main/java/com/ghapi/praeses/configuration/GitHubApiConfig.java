@@ -1,5 +1,6 @@
 package com.ghapi.praeses.configuration;
 
+import org.kohsuke.github.GitHub;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -7,13 +8,14 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.ghapi.praeses.controllers.GitHubEventController;
+import com.ghapi.praeses.controllers.GitHubUserController;
+
 
 @Configuration
 @ComponentScan("com.ghapi.praeses.controllers")
 public class GitHubApiConfig {
 	
-	private static String accessToken;
-		
 	@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurerAdapter() {
@@ -24,11 +26,9 @@ public class GitHubApiConfig {
         };
     }
 
-	public static void setAccessToken(String accessToken) {
-		GitHubApiConfig.accessToken = accessToken;
+	public static void updateClientForControllers(GitHub ghClient) {
+		GitHubUserController.setGhClient(ghClient);
+		GitHubEventController.setGhClient(ghClient);
 	}
 
-	public static String getAccessToken() {
-		return accessToken;
-	}
 }
