@@ -4,7 +4,7 @@ export class SimpleEvent {
     eventType: string;
     repo: string;
     avatarUrl: string;
-    createdAt: Date;
+    createdAt: string;
     
     public constructor () {
         

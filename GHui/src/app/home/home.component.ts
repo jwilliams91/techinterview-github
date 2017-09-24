@@ -11,15 +11,15 @@ import { SimpleEvent } from '../models/SimpleEvent';
 export class HomeComponent implements OnInit {
   title = 'Event Feed';
   selectedEvent: SimpleEvent;
-  events: SimpleEvent[];
   eventCols = [
     {field: 'username', header: 'Username'},
     {field: 'eventType', header: 'Event Type'},
     {field: 'repo', header: 'Repository'}
   ];
-  loggedIn = false;
+  loggedIn: boolean = false;
   eventsByUser = 'public';
-  loading = true;
+  loading: boolean = true;
+  refreshInProgress: boolean = false;
 
   constructor(private ghService: GHService, private activatedRoute: ActivatedRoute, private router: Router) {}
 
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
       this.ghService.getUserAvatar(sessionStorage.getItem('currentUser'));
     });
     if(this.loggedIn) {
-      this.updateTable();
+      this.updateTable(this.events);
       this.ghService.getUserAvatar(sessionStorage.getItem('currentUser'));
     }
       
@@ -42,25 +42,24 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  updateTable() {
-    this.loading = true;
-    if(this.eventsByUser == 'public') {
-      this.ghService.getEvents().then((events) => {
-        this.events = events;
-        this.ghService.getEventDetails(this.events[0].username, this.events[0].eventId).then((details) => console.log(details));
-        this.loading = false;
-      });
+  updateTable(events?:SimpleEvent[]) {
+    if(!events) {
+      this.loading = true;
+      this.ghService.getEvents(this.eventsByUser).then(() => this.loading = false);
     }
     else {
-      this.ghService.getEventsByCurrent().then((events) => {
-        this.events = events;
-        this.loading = false;
-      });
+      this.loading = false;
     }
   }
 
-  logSelected() {
-    console.log(this.selectedEvent);
+  get events(): SimpleEvent[] {
+    return this.ghService.eventData;
+  }
+
+  navToDetails() {
+    if(event) {
+      this.router.navigate(['/details', this.selectedEvent.username, this.selectedEvent.eventId]);
+    }
   }
 
   navToRepo(repo: string) {

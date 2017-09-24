@@ -12,6 +12,7 @@ import 'rxjs/add/operator/catch';
 export class GHService {
 
     public logonSuccess$: EventEmitter<String>;
+    eventData: SimpleEvent[];
 
     constructor(private http: Http) {
         this.logonSuccess$ = new EventEmitter();
@@ -51,18 +52,12 @@ export class GHService {
             });
     }
 
-    getEvents(): Promise<SimpleEvent[]> {
-        var url = Constants.API_URL + '/events/list';
+    getEvents(eventListType: string): Promise<SimpleEvent[]> {
+        var url = Constants.API_URL;
+        url += eventListType == 'public' ? '/events/list' : '/events/listByCurrentUser';
         return this.http.get(url)
                         .catch(this.catchError).toPromise()
-                        .then((res) => res.json() as SimpleEvent[]);
-    }
-
-    getEventsByCurrent(): Promise<SimpleEvent[]> {
-        var url = Constants.API_URL + '/events/listByCurrentUser';
-        return this.http.get(url)
-                        .catch(this.catchError).toPromise()
-                        .then((res) => res.json() as SimpleEvent[]);
+                        .then((res) => this.eventData = res.json() as SimpleEvent[]);
     }
 
     getEventDetails(username: string, eventId: number): Promise<SimpleEvent> {

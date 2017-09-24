@@ -14,7 +14,7 @@ public class SimpleEvent {
 	private String eventType;
 	private String repo;
 	private String avatarUrl;
-	private Date createdAt;
+	private String createdAt;
 
 	public SimpleEvent(GHEventInfo event) {
 		try {
@@ -23,7 +23,7 @@ public class SimpleEvent {
 			this.eventType = event.getType().toString();
 			this.repo = event.getRepository().getFullName();
 			this.avatarUrl = event.getActor().getAvatarUrl();
-			this.createdAt = event.getCreatedAt();
+			this.createdAt = event.getCreatedAt().toString();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,11 +70,11 @@ public class SimpleEvent {
 		this.avatarUrl = avatarUrl;
 	}
 
-	public Date getCreatedAt() {
+	public String getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}
 

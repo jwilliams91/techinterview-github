@@ -1,0 +1,22 @@
+<div class="container-fluid well" style="margin-top: 50px;">
+  <h1 class="text-center">Event Details</h1>
+  <div class="text-center"><i *ngIf="loading" class="fa fa-circle-o-notch fa-spin loader"></i></div>
+  <div *ngIf="!loading">
+    <div class="row text-center">
+      <img class="square lg" [src]="selectedEvent.avatarUrl" /><strong>{{selectedEvent.username}}</strong>
+    </div>
+    <hr>
+    <div class="row text-center res">
+      <label>Event ID: </label>{{selectedEvent.eventId}}
+    </div>
+    <div class="row text-center res">
+        <label>Event Type: </label>{{selectedEvent.eventType}}
+    </div>
+    <div class="row text-center res">
+        <label>Repository: </label><span><a style="color:#337ab7;" (click)="navToRepo(selectedEvent.repo)">{{selectedEvent.repo}}</a></span>
+    </div>
+    <div class="row text-center res">
+      <label>Created At: </label>{{selectedEvent.createdAt}}
+    </div>
+  </div>
+</div>

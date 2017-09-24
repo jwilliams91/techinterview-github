@@ -1,19 +1,22 @@
-<div *ngIf="loggedIn" class="container-fluid" style="margin-top: 50px;">
+<div *ngIf="loggedIn" class="container-fluid well" style="margin-top: 50px;">
   <div class="row text-center">
     <h1>{{title}}</h1>
   </div>
   <div class="row">
     <div class="col-md-10"></div>
     <div class="col-md-2">
-      <div class="row pull-right">
-          <label class="spacing"><input type="radio" name="eventList" [(ngModel)]="eventsByUser" value="public" (ngModelChange)="updateTable()"> Public</label>
-          <label class="spacing"><input type="radio" name="eventList" [(ngModel)]="eventsByUser" value="byUser" (ngModelChange)="updateTable()"> By User</label>
-          <button style="margin-right: 15px;" class="btn btn-primary" type="button" (click)="updateTable()"><span class="fa fa-refresh"></span> Refresh Events</button>
+      <div class="row text-right">
+        <div class="res" style="display: inline">
+            <label class="spacing"><input type="radio" name="eventList" [(ngModel)]="eventsByUser" value="public" (ngModelChange)="updateTable()"> Public</label>
+            <label class="spacing"><input type="radio" name="eventList" [(ngModel)]="eventsByUser" value="byUser" (ngModelChange)="updateTable()"> By User</label>
+        </div>
+          <button style="margin-right: 15px;" class="btn btn-primary" type="button" (click)="updateTable()"><span class="fa fa-refresh"></span><span class="resHide"> Refresh Events</span></button>
       </div>
     </div>
   </div>
-  <div class="text-center"><i *ngIf="loading == true" class="fa fa-circle-o-notch fa-spin loader"></i></div>
-  <p-dataTable *ngIf="loading == false" [value]="events" responsive="true" selectionMode="single" [(selection)]="selectedEvent" (onRowSelect)="logSelected()">
+  <hr>
+  <div class="text-center"><i *ngIf="loading" class="fa fa-circle-o-notch fa-spin loader"></i></div>
+  <p-dataTable *ngIf="!loading" [value]="events" responsive="true" selectionMode="single" dataKey="eventId" [(selection)]="selectedEvent" (onRowSelect)="navToDetails()">
     <p-column *ngFor="let col of eventCols" [field]="col.field" [header]="col.header">
         <ng-template let-row="rowData" pTemplate>
             <span *ngIf="col.header === 'Repository'"><a style="color:#337ab7;" (click)="navToRepo(row.repo)">{{row[col.field]}}</a></span>
