@@ -2,6 +2,10 @@
     .res { display: none !important;}
 }
 
+@media screen and (max-height: 600px) {
+    .res { display: none !important;}
+}
+
 img.square{
     max-width: 100%;
     max-height: 100%;

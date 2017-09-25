@@ -10,31 +10,35 @@ import { SimpleEvent } from '../models/SimpleEvent';
 })
 export class HomeComponent implements OnInit {
   title = 'Event Feed';
+
   selectedEvent: SimpleEvent;
   eventCols = [
     {field: 'username', header: 'Username'},
     {field: 'eventType', header: 'Event Type'},
     {field: 'repo', header: 'Repository'}
   ];
-  loggedIn: boolean = false;
   eventsByUser = 'public';
+
+  loggedIn: boolean = false;
   loading: boolean = true;
-  refreshInProgress: boolean = false;
 
   constructor(private ghService: GHService, private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.loggedIn = sessionStorage.getItem('currentUser') ? true : false;
+
+    //On Successful Logon event, populate the Event feed
     this.ghService.logonSuccess$.subscribe((message) => {
       this.loggedIn = true;
       this.updateTable();
-      this.ghService.getUserAvatar(sessionStorage.getItem('currentUser'));
     });
+
     if(this.loggedIn) {
       this.updateTable(this.events);
-      this.ghService.getUserAvatar(sessionStorage.getItem('currentUser'));
     }
-      
+    
+    //This component's route is also the callbackUrl for Github authentication
+    //If the code parameter is present, complete the authentication process
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       if (params['code']) {
         this.ghService.authorizeUser(params['code']).then(() => this.router.navigate(['/home']));
@@ -52,10 +56,12 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  //Get event data from shared service
   get events(): SimpleEvent[] {
     return this.ghService.eventData;
   }
 
+  //Table select event method, navigates to details page
   navToDetails() {
     if(event) {
       this.router.navigate(['/details', this.selectedEvent.username, this.selectedEvent.eventId]);

@@ -13,29 +13,30 @@ export class AppComponent {
   loggedIn: boolean;
   username: string;
   avatarUrl: string;
-  loaded: boolean;
 
   constructor(private ghService: GHService, private router: Router) { }
 
   ngOnInit() {
+    //If Session has user, get the avatar
     if(sessionStorage.getItem('currentUser')) {
       this.username = sessionStorage.getItem('currentUser');
       this.ghService.getUserAvatar(this.username).then((url) => {
         this.avatarUrl = url;
-        this.loaded = true;
+        this.loggedIn = true;
       });
-      this.loggedIn = true;
     }
+
+    //On Successful Logon event, get the avatar
     this.ghService.logonSuccess$.subscribe((message) => {
       this.username = sessionStorage.getItem('currentUser');
       this.ghService.getUserAvatar(this.username).then((url) => {
         this.avatarUrl = url;
-        this.loaded = true;
+        this.loggedIn = true;
       });
-      this.loggedIn = true;
     });
   }
 
+  //Github OAuth2 Authentication Link
   login(): void {
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${Constants.CLIENT_ID}&scope=${Constants.DEFAULT_SCOPES}`;
   }

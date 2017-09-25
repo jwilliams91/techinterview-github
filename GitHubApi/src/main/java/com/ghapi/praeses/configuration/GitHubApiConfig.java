@@ -21,12 +21,14 @@ public class GitHubApiConfig {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+            	//Set the api to accept request from the UI application
                 registry.addMapping("/api/**").allowedOrigins("http://localhost:4200");
             }
         };
     }
 
 	public static void updateClientForControllers(GitHub ghClient) {
+		//Not the best, would have different solution in production
 		GitHubUserController.setGhClient(ghClient);
 		GitHubEventController.setGhClient(ghClient);
 	}

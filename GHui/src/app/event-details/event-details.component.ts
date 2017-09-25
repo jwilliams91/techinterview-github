@@ -17,6 +17,7 @@ export class EventDetailsComponent implements OnInit {
   constructor(private ghService: GHService, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+    //Uses the route parameters to query the api for the event to display
     this.activatedRoute.params.subscribe((params: Params) => {
         this.ghService.getEventDetails(params['username'], params['eventId']).then((event) => {
           this.selectedEvent = event;

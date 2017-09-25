@@ -21,18 +21,21 @@ public class GitHubEventController {
 
 	private static GitHub ghClient;
 
+	//Returns 15 public events for the feed
 	@RequestMapping(value = "/list")
 	public List<SimpleEvent> getPublicEvents() throws IOException {
 		List<GHEventInfo> events = ghClient.getEvents().subList(0, 15);
 		return SimpleEvent.convertToSimpleEvents(events);
 	}
 
+	//Returns events performed by the currently authenticated user
 	@RequestMapping(value = "/listByCurrentUser")
 	public List<SimpleEvent> getEventsByUser() throws IOException {
 		List<GHEventInfo> events = ghClient.getMyself().listEvents().asList();
 		return SimpleEvent.convertToSimpleEvents(events);
 	}
 
+	//Returns Event based on username and eventId
 	@RequestMapping(value = "/getEventDetails")
 	public SimpleEvent getEventDetails(@RequestParam(value = "username") String username,
 			@RequestParam(value = "eventId") long eventId) throws IOException {

@@ -2,7 +2,6 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Constants } from './Constants';
 import { SimpleEvent } from './models/SimpleEvent';
-import { EventDetails } from './models/EventDetails';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -16,12 +15,6 @@ export class GHService {
 
     constructor(private http: Http) {
         this.logonSuccess$ = new EventEmitter();
-    }
-
-    getUser(username: string): any {
-        var url = Constants.API_URL + `/users/get?username=${username}`;
-        return this.http.get(url)
-            .toPromise();
     }
 
     getUserAvatar(username: string) {

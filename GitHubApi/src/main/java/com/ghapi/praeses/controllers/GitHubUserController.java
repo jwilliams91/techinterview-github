@@ -40,18 +40,13 @@ public class GitHubUserController {
 
 	private static GitHub ghClient;
 	
-	
-	@RequestMapping("/get")
-	public GHPerson getUser(@RequestParam(value="username") String username) throws IOException {
-			return ghClient.getUser(username);
-       
-	}
-	
+	//Returns URL to Avatar for a given user
 	@RequestMapping("/getUserAvatar")
 	public String getAvatar(@RequestParam(value="username") String username) throws IOException {
 		return ghClient.getUser(username).getAvatarUrl();
 	}
 	
+	//Return List of Avatars based on a list of supplied users
 	@RequestMapping("/getUserAvatarBulk")
 	public List<String> getAvatars(@RequestBody List<String> users) throws IOException {
 		List<String> avatarUrls = new ArrayList<String>();
@@ -61,6 +56,7 @@ public class GitHubUserController {
 		return avatarUrls;
 	}
 	
+	//Return the currently authenticated username
 	@RequestMapping("/current")
 	public String getCurrentUser() throws IOException {
 		return ghClient.getMyself().getLogin();
@@ -69,6 +65,7 @@ public class GitHubUserController {
 	@RequestMapping(value="/authenticate", method=POST)
 	public String authenticate(@RequestBody String code) {
 		try {
+			//Configure post request to Github to exchange code for user access token
 			String url = "https://github.com/login/oauth/access_token";
 			HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
 			HttpPost postRequest = new HttpPost(url);
@@ -78,9 +75,11 @@ public class GitHubUserController {
 			params.add(new BasicNameValuePair("code", code));
 			postRequest.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 			
+			//Execute post
 			HttpResponse response = httpClient.execute(postRequest);
 			HttpEntity entity = response.getEntity();
 			
+			//Convert the response to a string
 			if(entity != null) {
 				InputStream inputStream = entity.getContent();
 				StringBuilder textBuilder = new StringBuilder();
@@ -100,6 +99,7 @@ public class GitHubUserController {
 		return null;
 	}
 	
+	//Sets the accessToken for future API requests and returns the username
 	private String setTokenForClient(String rawToken) throws IOException {
 		String[] splitTokenString = rawToken.split("&");
 		String parsedToken = splitTokenString[0].substring(13);
