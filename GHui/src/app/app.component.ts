@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { GHService } from './GHService';
-import { Constants } from './Constants';
 import { Router } from '@angular/router';
+import { GHService } from './GHService';
+import { User } from './models/User';
+import { Constants } from './Constants';
+
 
 @Component({
   selector: 'app-root',
@@ -11,7 +13,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
 
   loggedIn: boolean;
-  username: string;
+  user: User;
   avatarUrl: string;
 
   constructor(private ghService: GHService, private router: Router) { }
@@ -19,8 +21,8 @@ export class AppComponent {
   ngOnInit() {
     //If Session has user, get the avatar
     if(sessionStorage.getItem('currentUser')) {
-      this.username = sessionStorage.getItem('currentUser');
-      this.ghService.getUserAvatar(this.username).then((url) => {
+      this.user = JSON.parse(sessionStorage.getItem('currentUser'));
+      this.ghService.getUserAvatar(this.user.username).then((url) => {
         this.avatarUrl = url;
         this.loggedIn = true;
       });
@@ -28,8 +30,8 @@ export class AppComponent {
 
     //On Successful Logon event, get the avatar
     this.ghService.logonSuccess$.subscribe((message) => {
-      this.username = sessionStorage.getItem('currentUser');
-      this.ghService.getUserAvatar(this.username).then((url) => {
+      this.user = JSON.parse(sessionStorage.getItem('currentUser'));
+      this.ghService.getUserAvatar(this.user.username).then((url) => {
         this.avatarUrl = url;
         this.loggedIn = true;
       });

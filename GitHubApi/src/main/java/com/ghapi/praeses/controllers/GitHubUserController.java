@@ -2,6 +2,7 @@ package com.ghapi.praeses.controllers;
 
 import static com.ghapi.praeses.configuration.Constants.CLIENT_ID;
 import static com.ghapi.praeses.configuration.Constants.CLIENT_SECRET;
+import static com.ghapi.praeses.configuration.GitHubApiConfig.gitHubRequest;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.BufferedReader;
@@ -14,8 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,45 +24,41 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
-import org.kohsuke.github.GHPerson;
 import org.kohsuke.github.GitHub;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ghapi.praeses.configuration.GitHubApiConfig;
+import com.ghapi.praeses.model.AuthenticatedUser;
+import com.ghapi.praeses.services.UserService;
 
 @RestController
 @RequestMapping("api/users")
 public class GitHubUserController {
 
-	private static GitHub ghClient;
-	
 	//Returns URL to Avatar for a given user
 	@RequestMapping("/getUserAvatar")
-	public String getAvatar(@RequestParam(value="username") String username) throws IOException {
-		return ghClient.getUser(username).getAvatarUrl();
+	public String getAvatar(@RequestParam(value="username") String username,
+							@RequestParam(value="token") String token) {
+		return (String) gitHubRequest(username, token, UserService::getAvatar);
 	}
 	
 	//Return List of Avatars based on a list of supplied users
 	@RequestMapping("/getUserAvatarBulk")
-	public List<String> getAvatars(@RequestBody List<String> users) throws IOException {
-		List<String> avatarUrls = new ArrayList<String>();
-		for(String user: users) {
-			avatarUrls.add(ghClient.getUser(user).getAvatarUrl());
-		}
-		return avatarUrls;
+	public List<String> getAvatars(@RequestBody List<String> users,
+								   @RequestParam(value="token") String token) {
+		return (List<String>) gitHubRequest(users, token, UserService::getAvatars);
 	}
 	
 	//Return the currently authenticated username
 	@RequestMapping("/current")
-	public String getCurrentUser() throws IOException {
-		return ghClient.getMyself().getLogin();
+	public String getCurrentUser(@RequestParam(value="token") String token) {
+		return (String) gitHubRequest(null, token, UserService::getCurrentUser);
 	}
 
 	@RequestMapping(value="/authenticate", method=POST)
-	public String authenticate(@RequestBody String code) {
+	public AuthenticatedUser authenticate(@RequestBody String code) {
 		try {
 			//Configure post request to Github to exchange code for user access token
 			String url = "https://github.com/login/oauth/access_token";
@@ -90,7 +85,7 @@ public class GitHubUserController {
 			            textBuilder.append((char) c);
 			        }
 			    }
-				return setTokenForClient(textBuilder.toString());	
+				return getAuthenticatedUser(textBuilder.toString());	
 			}
 		}
 		catch(IOException e) {
@@ -100,14 +95,11 @@ public class GitHubUserController {
 	}
 	
 	//Sets the accessToken for future API requests and returns the username
-	private String setTokenForClient(String rawToken) throws IOException {
+	private AuthenticatedUser getAuthenticatedUser(String rawToken) throws IOException {
 		String[] splitTokenString = rawToken.split("&");
 		String parsedToken = splitTokenString[0].substring(13);
-		GitHubApiConfig.updateClientForControllers(GitHub.connectUsingOAuth(parsedToken));
-		return ghClient.getMyself().getLogin();
+		GitHub ghClient = GitHub.connectUsingOAuth(parsedToken);
+		return new AuthenticatedUser(ghClient.getMyself().getLogin(), parsedToken);
 	}
 
-	public static void setGhClient(GitHub ghClient) {
-		GitHubUserController.ghClient = ghClient;
-	}
 }

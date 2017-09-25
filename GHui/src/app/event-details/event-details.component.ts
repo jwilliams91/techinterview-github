@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { GHService } from '../GHService';
 import { SimpleEvent } from '../models/SimpleEvent';
+import { EventRequest } from '../models/EventRequest';
 
 @Component({
   selector: 'app-event-details',
@@ -19,7 +20,7 @@ export class EventDetailsComponent implements OnInit {
   ngOnInit() {
     //Uses the route parameters to query the api for the event to display
     this.activatedRoute.params.subscribe((params: Params) => {
-        this.ghService.getEventDetails(params['username'], params['eventId']).then((event) => {
+        this.ghService.getEventDetails(new EventRequest(params['eventId'], params['username'])).then((event) => {
           this.selectedEvent = event;
           this.loading = false;
         });

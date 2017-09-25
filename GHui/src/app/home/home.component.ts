@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
 
   //Table select event method, navigates to details page
   navToDetails() {
-    if(event) {
+    if(this.selectedEvent) {
       this.router.navigate(['/details', this.selectedEvent.username, this.selectedEvent.eventId]);
     }
   }

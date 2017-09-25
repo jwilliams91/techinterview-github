@@ -1,15 +1,17 @@
 package com.ghapi.praeses.configuration;
 
+import java.io.IOException;
+import java.util.function.BiFunction;
+
 import org.kohsuke.github.GitHub;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.ghapi.praeses.controllers.GitHubEventController;
-import com.ghapi.praeses.controllers.GitHubUserController;
 
 
 @Configuration
@@ -26,11 +28,15 @@ public class GitHubApiConfig {
             }
         };
     }
-
-	public static void updateClientForControllers(GitHub ghClient) {
-		//Not the best, would have different solution in production
-		GitHubUserController.setGhClient(ghClient);
-		GitHubEventController.setGhClient(ghClient);
+	
+	public static Object gitHubRequest(Object input, String token, BiFunction<Object, GitHub, Object> function) {
+		try {
+			GitHub gh = GitHub.connectUsingOAuth(token);
+			return function.apply(input, gh);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		
 	}
-
 }

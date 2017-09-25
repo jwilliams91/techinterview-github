@@ -6,7 +6,7 @@
         <ul class="nav navbar-nav navbar-right">
             <li *ngIf="!loggedIn" ><button type="button" class="btn btn-primary navbar-btn" (click)="login()">Login</button></li>
             <li *ngIf="loggedIn" class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img class="square" [src]="avatarUrl"/>{{username}}<span class="caret"></span></a>
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img class="square" [src]="avatarUrl"/>{{user.username}}<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a (click)="logout()">Logout</a></li>
                 </ul>
