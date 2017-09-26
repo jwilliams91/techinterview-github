@@ -29,9 +29,9 @@ public class GitHubApiConfig {
         };
     }
 	
-	public static Object gitHubRequest(Object input, String token, BiFunction<Object, GitHub, Object> function) {
+	public static Object gitHubRequest(Object input, String authHeader, BiFunction<Object, GitHub, Object> function) {
 		try {
-			GitHub gh = GitHub.connectUsingOAuth(token);
+			GitHub gh = GitHub.connectUsingOAuth(authHeader.substring(7));
 			return function.apply(input, gh);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -39,4 +39,5 @@ public class GitHubApiConfig {
 		}
 		
 	}
+	
 }

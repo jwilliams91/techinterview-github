@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { Constants } from './Constants';
 import { SimpleEvent } from './models/SimpleEvent';
 import { User } from './models/User';
@@ -20,23 +20,20 @@ export class GHService {
     }
 
     getUserAvatar(username: string) {
-        var url = Constants.API_URL + `/users/getUserAvatar`;
-        url = this.appendToken(url) + `&username=${username}`;
-        return this.http.get(url).catch(this.catchError).toPromise()
+        var url = Constants.API_URL + `/users/getUserAvatar?username=${username}`;
+        return this.http.get(url, this.addTokenToHeaders()).catch(this.catchError).toPromise()
                         .then((res) => res._body as string);
     }
 
     getUserAvatarsBulk(users: string[]) {
         var url = Constants.API_URL + '/users/getUserAvatarBulk';
-        url = this.appendToken(url);
-        return this.http.post(url, users).catch(this.catchError).toPromise()
+        return this.http.post(url, users, this.addTokenToHeaders()).catch(this.catchError).toPromise()
                         .then((res) => res.json() as string[]);
     }
 
     getCurrentUser() {
         var url = Constants.API_URL + '/users/current';
-        url = this.appendToken(url);
-        return this.http.get(url)
+        return this.http.get(url, this.addTokenToHeaders())
             .catch(this.catchError).toPromise();
     }
 
@@ -53,16 +50,14 @@ export class GHService {
     getEvents(eventListType: string): Promise<SimpleEvent[]> {
         var url = Constants.API_URL;
         url += eventListType == 'public' ? '/events/list' : '/events/listByCurrentUser';
-        url = this.appendToken(url);
-        return this.http.get(url)
+        return this.http.get(url, this.addTokenToHeaders())
                         .catch(this.catchError).toPromise()
                         .then((res) => this.eventData = res.json() as SimpleEvent[]);
     }
 
     getEventDetails(eventRequest: EventRequest): Promise<SimpleEvent> {
         var url = Constants.API_URL + `/events/getEventDetails`;
-        url = this.appendToken(url);
-        return this.http.post(url, eventRequest)
+        return this.http.post(url, eventRequest, this.addTokenToHeaders())
                         .catch(this.catchError).toPromise()
                         .then((res) => res.json() as SimpleEvent);
     }
@@ -72,8 +67,9 @@ export class GHService {
         return Promise.reject(error.message || error);
     }
 
-    private appendToken(url: string) {
+    private addTokenToHeaders() {
         var current = JSON.parse(sessionStorage.getItem("currentUser")) as User;
-        return url += `?token=${current.token}`;
+        var headers = new Headers({'Authorization': 'Bearer ' + current.token});
+        return new RequestOptions({headers: headers});
     }
 }

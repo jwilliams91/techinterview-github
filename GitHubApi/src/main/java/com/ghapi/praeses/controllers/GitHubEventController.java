@@ -6,8 +6,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -23,21 +23,21 @@ public class GitHubEventController {
 
 	//Returns 15 public events for the feed
 	@RequestMapping(value = "/list")
-	public List<SimpleEvent> getPublicEvents(@RequestParam(value="token") String token) {
-		return (List<SimpleEvent>) gitHubRequest(null, token, EventService::getPublicEvents);
+	public List<SimpleEvent> getPublicEvents(@RequestHeader(value="Authorization") String authHeader) {
+		return (List<SimpleEvent>) gitHubRequest(null, authHeader, EventService::getPublicEvents);
 	}
 
 	//Returns events performed by the currently authenticated user
 	@RequestMapping(value = "/listByCurrentUser")
-	public List<SimpleEvent> getEventsByUser(@RequestParam(value="token") String token) {
-		return (List<SimpleEvent>) gitHubRequest(null, token, EventService::getEventsByUser);
+	public List<SimpleEvent> getEventsByUser(@RequestHeader(value="Authorization") String authHeader) {
+		return (List<SimpleEvent>) gitHubRequest(null, authHeader, EventService::getEventsByUser);
 	}
 
 	//Returns Event based on username and eventId
 	@RequestMapping(value = "/getEventDetails", method=POST)
 	public SimpleEvent getEventDetails(@RequestBody EventRequest eventRequest,
-									   @RequestParam(value="token") String token) {
-		return (SimpleEvent) gitHubRequest(eventRequest, token, EventService::getEventDetails);
+									   @RequestHeader(value="Authorization") String authHeader) {
+		return (SimpleEvent) gitHubRequest(eventRequest, authHeader, EventService::getEventDetails);
 	}
 
 }

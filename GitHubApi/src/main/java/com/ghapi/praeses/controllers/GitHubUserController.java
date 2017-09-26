@@ -26,6 +26,7 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
 import org.kohsuke.github.GitHub;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,21 +41,21 @@ public class GitHubUserController {
 	//Returns URL to Avatar for a given user
 	@RequestMapping("/getUserAvatar")
 	public String getAvatar(@RequestParam(value="username") String username,
-							@RequestParam(value="token") String token) {
-		return (String) gitHubRequest(username, token, UserService::getAvatar);
+							@RequestHeader(value="Authorization") String authHeader) {
+		return (String) gitHubRequest(username, authHeader, UserService::getAvatar);
 	}
 	
 	//Return List of Avatars based on a list of supplied users
 	@RequestMapping("/getUserAvatarBulk")
 	public List<String> getAvatars(@RequestBody List<String> users,
-								   @RequestParam(value="token") String token) {
-		return (List<String>) gitHubRequest(users, token, UserService::getAvatars);
+								   @RequestHeader(value="Authorization") String authHeader) {
+		return (List<String>) gitHubRequest(users, authHeader, UserService::getAvatars);
 	}
 	
 	//Return the currently authenticated username
 	@RequestMapping("/current")
-	public String getCurrentUser(@RequestParam(value="token") String token) {
-		return (String) gitHubRequest(null, token, UserService::getCurrentUser);
+	public String getCurrentUser(@RequestHeader(value="Authorization") String authHeader) {
+		return (String) gitHubRequest(null, authHeader, UserService::getCurrentUser);
 	}
 
 	@RequestMapping(value="/authenticate", method=POST)
