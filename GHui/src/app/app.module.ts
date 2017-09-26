@@ -11,12 +11,14 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { GHService } from './GHService';
 import { HomeComponent } from './home/home.component';
 import { EventDetailsComponent } from './event-details/event-details.component';
+import { PullToRefreshComponent } from './pull-to-refresh/pull-to-refresh.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    EventDetailsComponent
+    EventDetailsComponent,
+    PullToRefreshComponent
   ],
   imports: [
     AppRoutingModule,

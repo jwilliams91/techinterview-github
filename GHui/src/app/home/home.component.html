@@ -14,7 +14,7 @@
       </div>
     </div>
   </div>
-  <hr>
+  <pull-to-refresh (onPull)="onPull()" [refresh]="loading"></pull-to-refresh>
   <div class="text-center"><i *ngIf="loading" class="fa fa-circle-o-notch fa-spin loader"></i></div>
   <p-dataTable *ngIf="!loading" [value]="events" responsive="true" selectionMode="single" dataKey="eventId" [(selection)]="selectedEvent" (onRowSelect)="navToDetails()">
     <p-column *ngFor="let col of eventCols" [field]="col.field" [header]="col.header">

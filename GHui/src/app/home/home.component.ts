@@ -1,6 +1,5 @@
-import { Component, OnInit, EventEmitter, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, EventEmitter} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { DOCUMENT } from '@angular/platform-browser';
 import { GHService } from '../GHService';
 import { SimpleEvent } from '../models/SimpleEvent';
 
@@ -23,14 +22,7 @@ export class HomeComponent implements OnInit {
   loggedIn: boolean = false;
   loading: boolean = true;
 
-  private lastScrollTop: number = 0;
-  private isAtTop: boolean = false;
-  private element: any;
-
-  constructor(private ghService: GHService, private activatedRoute: ActivatedRoute,
-              private router: Router, el:ElementRef) {
-                this.element = el;
-              }
+  constructor(private ghService: GHService, private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.loggedIn = sessionStorage.getItem('currentUser') ? true : false;
@@ -80,16 +72,9 @@ export class HomeComponent implements OnInit {
     window.open(`https://github.com/${repo}`);
   }
   
-  //Pull To Refresh
-  @HostListener('scroll')
-  @HostListener('touchmove')
-  onScroll() {
-      if(this.scrollTop <= 0 && this.lastScrollTop <= 0) {
-          if(this.isAtTop && !this.loading) this.updateTable();
-          else this.isAtTop = true;
-      }
-      this.lastScrollTop = this.scrollTop;
+  //Pull to Refresh Callback
+  onPull() {
+    this.loading = true;
+    this.updateTable();
   }
-
-  private get scrollTop() { return this.element.scrollTop || 0; }
 }
