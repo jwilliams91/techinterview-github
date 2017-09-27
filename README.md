@@ -1,5 +1,31 @@
 # Technical Interview Homework: GitHub Dashboard
 
+## Install Instructions
+#### Make sure you have `npm` and `mvn` installed:
+```bash
+npm --version
+mvn --version
+```
+If `npm` is not installed, install it by following the instructions listed [here](https://nodejs.org/en/download/package-manager/).
+If `mvn` is not installed, install it by following the instructions listed [here](https://maven.apache.org/install.html).
+
+#### From the root level of the `GHui` directory run:
+```bash
+npm install
+```
+
+#### Run the startup script:
+```bash
+npm start
+```
+This is configured for Windows systems.
+
+If you are running a Linux system, execute the following instead:
+```bash
+nohup mvn spring-boot:run -f ../GitHubApi/pom.xml
+ng serve
+```
+
 
 ##Purpose
 The purpose of this exercise is to assess the candidate’s ability to build cross platform software clients that satisfy stated requirements. The completed assignment should not only satisfy the requirements outlined below, but also give the candidate an opportunity to show-off their skills.
