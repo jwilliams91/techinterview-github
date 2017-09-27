@@ -7,6 +7,7 @@ npm --version
 mvn --version
 ```
 If `npm` is not installed, install it by following the instructions listed [here](https://nodejs.org/en/download/package-manager/).
+
 If `mvn` is not installed, install it by following the instructions listed [here](https://maven.apache.org/install.html).
 
 #### From the root level of the `GHui` directory run:
@@ -22,7 +23,7 @@ This is configured for Windows systems.
 
 If you are running a Linux system, execute the following instead:
 ```bash
-nohup mvn spring-boot:run -f ../GitHubApi/pom.xml
+nohup mvn spring-boot:run -f ../GitHubApi/pom.xml &
 ng serve
 ```
 
