@@ -26,7 +26,7 @@ If you are running a Linux system, execute the following instead:
 nohup mvn spring-boot:run -f ../GitHubApi/pom.xml &
 ng serve
 ```
-
+Navigate to [http://localhost:4200](http://localhost:4200) to view the application!
 
 ##Purpose
 The purpose of this exercise is to assess the candidate’s ability to build cross platform software clients that satisfy stated requirements. The completed assignment should not only satisfy the requirements outlined below, but also give the candidate an opportunity to show-off their skills.
