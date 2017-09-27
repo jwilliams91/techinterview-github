@@ -23,8 +23,7 @@ This is configured for Windows systems.
 
 If you are running a Linux system, execute the following instead:
 ```bash
-nohup mvn spring-boot:run -f ../GitHubApi/pom.xml &
-ng serve
+npm run-script start-x
 ```
 Navigate to [http://localhost:4200](http://localhost:4200) to view the application!
 
