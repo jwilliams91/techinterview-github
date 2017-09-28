@@ -63,9 +63,13 @@ export class HomeComponent implements OnInit {
 
   //Table select event method, navigates to details page
   navToDetails() {
-    if(this.selectedEvent) {
-      this.router.navigate(['/details', this.selectedEvent.username, this.selectedEvent.eventId]);
-    }
+    //Fix for bug of OnRowSelect firing before prime datatable could ngmodel back the selectedEvent in mobile view
+    //Timeout is zero. This allows angular to complete a digest/change detection cycle.
+    setTimeout(() => {
+      if(this.selectedEvent) {
+        this.router.navigate(['/details', this.selectedEvent.username, this.selectedEvent.eventId]);
+      }
+    });
   }
 
   navToRepo(repo: string) {

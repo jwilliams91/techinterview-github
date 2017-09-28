@@ -3,20 +3,20 @@
   <div class="text-center"><i *ngIf="loading" class="fa fa-circle-o-notch fa-spin loader"></i></div>
   <div *ngIf="!loading">
     <div class="row text-center">
-      <img class="square lg" [src]="selectedEvent.avatarUrl" /><strong>{{selectedEvent.username}}</strong>
+      <img class="square lg" [src]="selectedEvent.avatarUrl" /><strong> {{selectedEvent.username}}</strong>
     </div>
     <hr>
     <div class="row text-center res">
-      <label>Event ID: </label>{{selectedEvent.eventId}}
+      <label>Event ID: </label> {{selectedEvent.eventId}}
     </div>
     <div class="row text-center res">
-        <label>Event Type: </label>{{selectedEvent.eventType}}
+        <label>Event Type: </label> {{selectedEvent.eventType}}
     </div>
     <div class="row text-center res">
-        <label>Repository: </label><span><a style="color:#337ab7;" (click)="navToRepo(selectedEvent.repo)">{{selectedEvent.repo}}</a></span>
+        <label>Repository: </label><span><a style="color:#337ab7;" (click)="navToRepo(selectedEvent.repo)"> {{selectedEvent.repo}}</a></span>
     </div>
     <div class="row text-center res">
-      <label>Created At: </label>{{selectedEvent.createdAt}}
+      <label>Created At: </label> {{selectedEvent.createdAt}}
     </div>
   </div>
 </div>

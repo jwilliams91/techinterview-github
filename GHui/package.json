@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "start mvn spring-boot:run -f ..\\GitHubApi\\pom.xml && ng serve",
-    "start-x": "./start-x.sh",
+    "start-x": "chmod +x ./start-x.sh && ./start-x.sh",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
