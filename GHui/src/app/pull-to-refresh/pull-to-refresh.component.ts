@@ -7,9 +7,9 @@ import { Component, Input, Output, EventEmitter, ElementRef, HostListener} from 
 })
 export class PullToRefreshComponent  {
 
-  private lastScrollTop:number = 0;
-  private isAtTop:boolean = false;
-  private element:any;
+  private lastScrollTop: number;
+  private isAtTop: boolean = false;
+  private element: any;
 
   @Input('refresh') inProgress:boolean = false;
   @Output() onPull:EventEmitter<any> = new EventEmitter<any>();

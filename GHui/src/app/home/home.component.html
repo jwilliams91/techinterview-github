@@ -14,15 +14,17 @@
       </div>
     </div>
   </div>
-  <pull-to-refresh (onPull)="onPull()" [refresh]="loading"></pull-to-refresh>
+  <hr>
   <div class="text-center"><i *ngIf="loading" class="fa fa-circle-o-notch fa-spin loader"></i></div>
-  <p-dataTable *ngIf="!loading" [value]="events" responsive="true" selectionMode="single" dataKey="eventId" [(selection)]="selectedEvent" (onRowSelect)="navToDetails()">
-    <p-column *ngFor="let col of eventCols" [field]="col.field" [header]="col.header">
-        <ng-template let-row="rowData" pTemplate>
-            <span *ngIf="col.header === 'Repository'"><a style="color:#337ab7;" (click)="navToRepo(row.repo)">{{row[col.field]}}</a></span>
-            <span *ngIf="col.header === 'Event Type'">{{row[col.field]}}</span>
-            <span *ngIf="col.header === 'Username'"><img class="square" [src]="row['avatarUrl']"/>{{row[col.field]}}</span>
-      </ng-template>
-    </p-column>
-  </p-dataTable>
+  <pull-to-refresh (onPull)="onPull()" [refresh]="loading" style="height: 700px;" *ngIf="!loading">
+      <p-dataTable *ngIf="!loading" [value]="events" responsive="true" selectionMode="single" dataKey="eventId" [(selection)]="selectedEvent" (onRowSelect)="navToDetails()">
+          <p-column *ngFor="let col of eventCols" [field]="col.field" [header]="col.header">
+              <ng-template let-row="rowData" pTemplate>
+                  <span *ngIf="col.header === 'Repository'"><a style="color:#337ab7;" (click)="navToRepo(row.repo)">{{row[col.field]}}</a></span>
+                  <span *ngIf="col.header === 'Event Type'">{{row[col.field]}}</span>
+                  <span *ngIf="col.header === 'Username'"><img class="square" [src]="row['avatarUrl']"/>{{row[col.field]}}</span>
+            </ng-template>
+          </p-column>
+        </p-dataTable>
+  </pull-to-refresh>
 </div>
